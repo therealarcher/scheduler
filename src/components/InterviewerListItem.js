@@ -1,12 +1,12 @@
 import React from "react";
 import classnames from "classnames";
-import "components/InterviewerListItem.scss";
+import "styles/InterviewerListItem.scss";
 import { action } from "@storybook/addon-actions/dist/preview";
 
 export default function InterviewerListItem(props) {
   console.log('InterviewerListItem props: ', props);
   const interviewerClass = classnames("interviewers__item", {
-    "interviewers__item--selected": props.selected,
+    "interviewers__item--selected": props.selected
   });
   
   return (
@@ -16,14 +16,16 @@ export default function InterviewerListItem(props) {
       name={props.name}
       avatar={props.avatar}
       setInterviewer={action("setInterviewer")}
+      //setInterviewer = () => {} // if error that setInterviewer is not a function
     >
-  
-    <li class="interviewers__item">
       <img
         className="interviewers__item-image"
-        src="https://i.imgur.com/LpaY82x.png"
-        alt="Sylvia Palmer"
+        src={props.avatar}
+        alt={props.name}
       />
-      Sylvia Palmer
+      {props.name}
     </li>
-  )}
+  );
+};
+
+//{selected ? "Sylvia Palmer" : ""}
