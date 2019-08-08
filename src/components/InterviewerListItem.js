@@ -16,6 +16,7 @@ export default function InterviewerListItem(props) {
       name={props.name}
       avatar={props.avatar}
       setInterviewer={action("setInterviewer")}
+      onClick={() => props.setInterviewer(props.name)}
       //setInterviewer = () => {} // if error that setInterviewer is not a function
     >
       <img
