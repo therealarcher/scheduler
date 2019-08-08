@@ -4,7 +4,7 @@ import "styles/InterviewerListItem.scss";
 import { action } from "@storybook/addon-actions/dist/preview";
 
 export default function InterviewerListItem(props) {
-  console.log('InterviewerListItem props: ', props);
+  //console.log('InterviewerListItem props: ', props);
   const interviewerClass = classnames("interviewers__item", {
     "interviewers__item--selected": props.selected
   });

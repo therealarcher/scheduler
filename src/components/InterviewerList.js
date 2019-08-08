@@ -2,7 +2,7 @@ import React from "react";
 import InterviewerListItem from "components/InterviewerListItem";
 
 export default function InterviewerList(props) {
-  console.log('InterviewerList props : ', props);
+  //console.log('InterviewerList props : ', props);
   
   
   return (
@@ -16,7 +16,7 @@ export default function InterviewerList(props) {
           name={i.name}
           avatar={i.avatar}
           selected={i.id === props.interviewer}
-          setInterviewer={props.setInterviewer}
+          setInterviewer={(event) => props.onChange(i.id)}
         />
       ))
       }

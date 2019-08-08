@@ -15,6 +15,7 @@ import Confirm from "components/Appointment/Confirm"
 import Header from "components/Appointment/Header"
 import Status from "components/Appointment/Status"
 import Error from "components/Appointment/Error"
+import Form from "components/Appointment/Form"
 
 storiesOf("Button", module)
   .addParameters({
@@ -106,7 +107,7 @@ storiesOf("InterviewerListItem", module)
       id={interviewer.id}
       name={interviewer.name}
       avatar={interviewer.avatar}
-      setInterviewer={action("setInterviewer")}
+      setInterviewer={(event) => action("setInterviewer")(interviewer.id)}
     />
   ));
 
@@ -157,8 +158,8 @@ storiesOf("Appointment", module)
 
   .add("Confirm", () => <Confirm 
     message="Delete the appointment?"
-    onConfirm={() => console.log('onConfirm')}
-    onCancel={() => console.log('onCancel')}
+    onConfirm={action('onConfirm')}
+    onCancel={action('onCancel')}
     />)
 
   .add("Status", () => <Status message="Deleting" />)
@@ -166,4 +167,20 @@ storiesOf("Appointment", module)
   .add("Error", () => <Error
     message="Could not delete appointment" 
     onClose={() => console.log('onClose')} 
+    />)
+
+  .add("Create", () => <Form 
+    mode = "CREATE"
+    interviewers={interviewers}
+    onSave={action('onSave')}
+    onCancel={action('onCancel')} 
+    />)
+
+  .add("Edit", () => <Form 
+    mode = "EDIT"
+    name={"BillyBob"} 
+    interviewers={interviewers}
+    interviewer={5}
+    onSave={action('onSave')}
+    onCancel={action('onCancel')}
     />)
