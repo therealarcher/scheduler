@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
@@ -16,6 +16,7 @@ import Header from "components/Appointment/Header"
 import Status from "components/Appointment/Status"
 import Error from "components/Appointment/Error"
 import Form from "components/Appointment/Form"
+import Appointment from "components/Appointment/"
 
 storiesOf("Button", module)
   .addParameters({
@@ -147,9 +148,10 @@ storiesOf("Appointment", module)
   
   .add("Header", () => <Header mode = "HEADER" time="12pm" mode="Header" />)
 
-  .add("Empty", () => <Empty onAdd={() => (console.log('Empty'))} />)
+  .add("Empty", () => <Empty mode = "EMPTY" onAdd={() => (console.log('Empty'))} />)
 
   .add("Show", () => <Show 
+    mode="SHOW"
     student="Lydia Miller-Jones"
     interviewer={interviewers[2].name}
     onEdit={() => console.log('onEdit')}
@@ -157,14 +159,19 @@ storiesOf("Appointment", module)
     />)
 
   .add("Confirm", () => <Confirm 
+    mode="CONFIRM"
     message="Delete the appointment?"
     onConfirm={action('onConfirm')}
     onCancel={action('onCancel')}
     />)
 
-  .add("Status", () => <Status message="Deleting" />)
+  .add("Status", () => <Status 
+    mode="STATUS"
+    message="Deleting"
+    />)
 
   .add("Error", () => <Error
+    mode="ERROR"
     message="Could not delete appointment" 
     onClose={() => console.log('onClose')} 
     />)
@@ -184,3 +191,21 @@ storiesOf("Appointment", module)
     onSave={action('onSave')}
     onCancel={action('onCancel')}
     />)
+  
+    .add("Appointment Empty", () => (
+      <Fragment>
+        <Appointment id={1} time="12pm" />
+        <Appointment id="last" time="1pm" />
+      </Fragment>
+    ))
+
+    .add("Appointment Booked", () => (
+      <Fragment>
+        <Appointment
+          id={1}
+          time="12pm"
+          interview={{ student: "Lydia Miller-Jones", interviewer }}
+        />
+        <Appointment id="last" time="1pm" />
+      </Fragment>
+    ))

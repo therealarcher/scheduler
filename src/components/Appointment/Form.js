@@ -22,7 +22,7 @@ const Form = (props) => {
             type="text"
             placeholder="Enter Student Name"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => setName(event.target.value)} //event.target.value retrieves value for whatever it's called on
           />
         </form>
         <InterviewerList
