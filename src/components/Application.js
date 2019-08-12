@@ -36,28 +36,30 @@ export default function Application(props) {
       );
     }
   );
-  debugger;
+  //debugger;
   useEffect(() => {
     Promise.all([
       axios.get("http://localhost:3001/api/days"),
       axios.get("http://localhost:3001/api/appointments")
-    ]).then(
-      all => {
-        setDays(all[0].data);
-        setAppointments(all[1].data);
-        // let appointments = [];
-        // console.log("state.day: ", state.day);
-        // console.log("state.days: ", state);
-        // state.days.forEach(function(day) {
-        //   const apptForDay = getAppointmentsForDay(state, day.name);
-        //   appointments.push(apptForDay);
-        // });
-        // console.log("line 48: ", appointments);
-      },
-      [state.day]
-    );
-  });
-  console.log("state line 62: ", state);
+    ]).then(all => {
+      setState(oldState => {
+        return {
+          ...oldState,
+          appointments: all[1].data,
+          days: all[0].data
+        };
+      });
+      // let appointments = [];
+      // console.log("state.day: ", state.day);
+      // console.log("state.days: ", state);
+      // state.days.forEach(function(day) {
+      //   const apptForDay = getAppointmentsForDay(state, day.name);
+      //   appointments.push(apptForDay);
+      // });
+      // console.log("line 48: ", appointments);
+    });
+  }, [state.day]);
+  //console.log("state line 62: ", state);
 
   return (
     <main className="layout">
