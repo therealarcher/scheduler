@@ -1,3 +1,4 @@
+// returns the appointments for a given day
 const getAppointmentsForDay = (state, day) => {
   const appointmentsId = state.days
     .filter(e => e.name === day)
@@ -10,6 +11,19 @@ const getAppointmentsForDay = (state, day) => {
   });
 
   return appointment;
+};
+
+// returns an object containing student, interviewer
+const getInterview = (state, interview) => {
+  if (!interview) {
+    return null;
+  } else {
+    const student = interview.student;
+    console.log("state in getInterview: ", state);
+    const interviewer = state.interviewers[interview.interviewer];
+    const interviewObj = { student, interviewer };
+    return interviewObj;
+  }
 };
 
 // test attempt
@@ -31,4 +45,4 @@ const getAppointmentsForDay = (state, day) => {
 //   }
 // };
 
-export default getAppointmentsForDay;
+export { getAppointmentsForDay, getInterview };
