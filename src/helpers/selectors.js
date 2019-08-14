@@ -19,7 +19,7 @@ const getInterview = (state, interview) => {
     return null;
   } else {
     const student = interview.student;
-    console.log("state in getInterview: ", state);
+    //console.log("state in getInterview: ", state);
     const interviewer = state.interviewers[interview.interviewer];
     const interviewObj = { student, interviewer };
     return interviewObj;
@@ -44,5 +44,14 @@ const getInterview = (state, interview) => {
 //     }
 //   }
 // };
+
+//David's solution
+// const foundDay = state.days.filter(d => d.name === day)[0];
+
+// if (!foundDay) {
+//   return [];
+// }
+
+// return foundDay.appointments.map(id =>state.appointments[id]);
 
 export { getAppointmentsForDay, getInterview };
