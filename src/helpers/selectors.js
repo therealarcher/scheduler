@@ -13,6 +13,19 @@ const getAppointmentsForDay = (state, day) => {
   return appointment;
 };
 
+const getInterviewersForDay = (state, day) => {
+  const interviewersId = state.days
+    .filter(e => e.name === day)
+    .map(e => e.interviewers)
+    .reduce((acc, val) => acc.concat(val), []);
+  const interviewer = [];
+  interviewersId.forEach(e => {
+    if (state.interviewers[e]) interviewer.push(state.interviewers[e]);
+  });
+
+  return interviewer;
+};
+
 // returns an object containing student, interviewer
 const getInterview = (state, interview) => {
   if (!interview) {
@@ -54,4 +67,4 @@ const getInterview = (state, interview) => {
 
 // return foundDay.appointments.map(id =>state.appointments[id]);
 
-export { getAppointmentsForDay, getInterview };
+export { getAppointmentsForDay, getInterview, getInterviewersForDay };

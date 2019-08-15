@@ -4,7 +4,11 @@ import InterviewerList from "components/InterviewerList";
 import "components/Application.scss";
 import Appointment from "components/Appointment";
 import axios from "axios";
-import { getAppointmentsForDay, getInterview } from "../helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay
+} from "../helpers/selectors";
 
 export default function Application(props) {
   //const [day, setDay] = useState("Monday");
@@ -21,13 +25,29 @@ export default function Application(props) {
   const setDay = day => setState({ ...state, day });
   const setDays = days => setState(prev => ({ ...prev, days }));
   const setAppointments = appointments => setState({ ...state, appointments });
-  //const setDays = days => setState(prev => ({ ...prev, days }));
-  //const setAppointments = appointments => setState({ ...state, appointments });
+  const bookInterview = (id, interview) => {
+    console.log(id, interview);
+
+    const appointments = {
+      ...state.appointments,
+      [id]: { ...state.appointments[id], interview: interview }
+    };
+
+    console.log(state.appointments);
+    console.log("appointments: ", appointments);
+
+    return axios
+      .put(`http://localhost:3001/api/appointments/${id}`, appointments[id])
+      .then(res => {
+        setState({ ...state, appointments: appointments });
+      });
+  };
 
   let renderedAppointments = getAppointmentsForDay(state, state.day).map(
     appointment => {
       // eg, interview = { student: "Lydia", interview: { id: "1", name: "Sylvia", avatar: "https://i.imgur.com/xyc.png" } }
       const interview = getInterview(state, appointment.interview);
+      // console.log("SEE HERE", interview);
       return (
         <Appointment
           //key={appointment.id}
@@ -36,11 +56,14 @@ export default function Application(props) {
           id={appointment.id}
           time={appointment.time}
           interview={interview}
+          interviewers={getInterviewersForDay(state, state.day)}
+          bookInterview={bookInterview}
         />
       );
     }
   );
-  //debugger;
+  //debugger
+
   useEffect(() => {
     Promise.all([
       axios.get("http://localhost:3001/api/days"),
