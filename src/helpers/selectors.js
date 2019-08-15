@@ -39,25 +39,6 @@ const getInterview = (state, interview) => {
   }
 };
 
-// test attempt
-// const getAppointmentsForDay = (state, day) => {
-//   const appointment = [];
-//   const appointmentsId = state.days;
-//   console.log("appointment: ", appointment);
-//   console.log("state.days: ", state.days);
-
-//   for (let i in state.days) {
-//     let dayObj = state.days[i];
-//     //console.log('day: ', state.days[i]);
-//     if (dayObj.name === day) {
-//       console.log(dayObj.appointments);
-//       return dayObj.appointments;
-//       //return dayObj.appointments;
-//       dayAppt.push(dayObj.appointments);
-//     }
-//   }
-// };
-
 //David's solution
 // const foundDay = state.days.filter(d => d.name === day)[0];
 

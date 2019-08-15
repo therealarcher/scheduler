@@ -25,22 +25,79 @@ export default function Application(props) {
   const setDay = day => setState({ ...state, day });
   const setDays = days => setState(prev => ({ ...prev, days }));
   const setAppointments = appointments => setState({ ...state, appointments });
+
+  // const bookInterview = (id, interview) => {
+  //   console.log(id, interview);
+
+  //   const appointments = {
+  //     ...state.appointments,
+  //     [id]: { ...state.appointments[id], interview: interview }
+  //   };
+
+  //   console.log(state.appointments);
+  //   console.log("appointments: ", appointments);
+
+  //   return axios
+  //     .put(`http://localhost:3001/api/appointments/${id}`, appointments[id])
+  //     .then(res => {
+  //       setState({ ...state, appointments: appointments });
+  //     });
+  // };
+
   const bookInterview = (id, interview) => {
     console.log(id, interview);
+    console.log("state.appointments[id]: ", state.appointments[id]);
+
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    console.log("appointment: ", appointment);
 
     const appointments = {
       ...state.appointments,
-      [id]: { ...state.appointments[id], interview: interview }
+      [id]: appointment
     };
 
-    console.log(state.appointments);
-    console.log("appointments: ", appointments);
+    return axios
+      .put(`/api/appointments/${id}`, {
+        interview: appointment.interview
+      })
+      .then(resp => {
+        if (!resp.status === 204) {
+          console.error("Server responded with a non 2xx response", resp.body);
+        }
+        setState({ ...state, appointments });
+      });
+  };
+
+  const deleteInterview = id => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
 
     return axios
-      .put(`http://localhost:3001/api/appointments/${id}`, appointments[id])
-      .then(res => {
-        setState({ ...state, appointments: appointments });
+      .delete(`/api/appointments/${id}`, {
+        interview: appointment.interview
+      })
+      .then(resp => {
+        if (!resp.status === 204) {
+          console.error("Server responded with a non 2xx response", resp.body);
+          return;
+        }
+        setState({ ...state, appointments });
       });
+  };
+
+  const editInterview = () => {
+    console.log("editInterview");
   };
 
   let renderedAppointments = getAppointmentsForDay(state, state.day).map(
@@ -58,6 +115,8 @@ export default function Application(props) {
           interview={interview}
           interviewers={getInterviewersForDay(state, state.day)}
           bookInterview={bookInterview}
+          deleteInterview={deleteInterview}
+          editInterview={editInterview}
         />
       );
     }
