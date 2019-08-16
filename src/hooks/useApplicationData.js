@@ -1,4 +1,5 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
+import { getAppointmentsForDay } from "helpers/selectors";
 import axios from "axios";
 
 export default function Application() {
@@ -12,6 +13,14 @@ export default function Application() {
   const SET_DAY = "SET_DAY";
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
+
+  const countSpots = (state, day) => {
+    const appointments = getAppointmentsForDay(state, day);
+
+    return appointments.filter(a => a.interview === null).length;
+  };
+
+  const getDay = (state, day) => state.days.filter(d => d.name === day)[0];
 
   const reducer = (state, action) => {
     switch (action.type) {
@@ -27,13 +36,26 @@ export default function Application() {
       case SET_INTERVIEW: {
         const appointment = {
           ...state.appointments[action.id],
-          interview: { ...action.interview }
+          interview: action.interview ? { ...action.interview } : null
         };
         const appointments = {
           ...state.appointments,
           [action.id]: appointment
         };
-        return { ...state, appointments };
+        //return { ...state, appointments };
+
+        const newState = { ...state, appointments };
+        const day = getDay(newState, newState.day);
+        const spots = countSpots(newState, newState.day);
+        const newDay = { ...day, spots };
+        const days = newState.days.map(d => {
+          if (d.name === newDay.name) {
+            return newDay;
+          }
+          return d;
+        });
+
+        return { ...newState, days };
       }
       default:
         throw new Error(
