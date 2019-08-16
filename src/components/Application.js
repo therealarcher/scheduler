@@ -157,7 +157,14 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />
       </section>
-      <section className="schedule">{renderedAppointments}</section>
+      <section className="schedule">
+        {renderedAppointments}
+        <Appointment
+          //key={appointment.id}
+          //{...appointment}
+          time="5pm"
+        />
+      </section>
     </main>
   );
 }

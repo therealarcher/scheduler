@@ -1,100 +1,74 @@
 import { useState, useEffect, useReducer } from "react";
-// import DayList from "components/DayList";
-// import InterviewerList from "components/InterviewerList";
-// import "components/Application.scss";
-// import Appointment from "components/Appointment";
 import axios from "axios";
-// import {
-//   getAppointmentsForDay,
-//   getInterview,
-//   getInterviewersForDay
-// } from "../helpers/selectors";
 
-export default function Application(props) {
-  //const [day, setDay] = useState("Monday");
-  //const [days, setDays] = useState([]);
-  const [state, setState] = useState({
+export default function Application() {
+  const initialState = {
     day: "Monday",
     days: [],
     appointments: {},
     interviewer: {}
-  });
+  };
 
-  // const appointments = [getAppointmentsForDay()];
+  const SET_DAY = "SET_DAY";
+  const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+  const SET_INTERVIEW = "SET_INTERVIEW";
 
-  const setDay = day => setState({ ...state, day });
-  const setDays = days => setState(prev => ({ ...prev, days }));
-  const setAppointments = appointments => setState({ ...state, appointments });
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case SET_DAY:
+        return { ...state, day: action.day };
+      case SET_APPLICATION_DATA:
+        return {
+          ...state,
+          days: action.days,
+          appointments: action.appointments,
+          interviewers: action.interviewers
+        };
+      case SET_INTERVIEW: {
+        const appointment = {
+          ...state.appointments[action.id],
+          interview: { ...action.interview }
+        };
+        const appointments = {
+          ...state.appointments,
+          [action.id]: appointment
+        };
+        return { ...state, appointments };
+      }
+      default:
+        throw new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+    }
+  };
 
-  // const bookInterview = (id, interview) => {
-  //   console.log(id, interview);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  //   const appointments = {
-  //     ...state.appointments,
-  //     [id]: { ...state.appointments[id], interview: interview }
-  //   };
-
-  //   console.log(state.appointments);
-  //   console.log("appointments: ", appointments);
-
-  //   return axios
-  //     .put(`http://localhost:3001/api/appointments/${id}`, appointments[id])
-  //     .then(res => {
-  //       setState({ ...state, appointments: appointments });
-  //     });
-  // };
+  const setDay = day => dispatch({ type: SET_DAY, day });
 
   const bookInterview = (id, interview) => {
     console.log(id, interview);
-    console.log("state.appointments[id]: ", state.appointments[id]);
-
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-
-    console.log("appointment: ", appointment);
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
     return axios
       .put(`/api/appointments/${id}`, {
-        interview: appointment.interview
-      })
-      .then(resp => {
-        if (!resp.status === 204) {
-          console.error("Server responded with a non 2xx response", resp.body);
-        }
-        setState({ ...state, appointments });
-      });
-  };
-
-  const deleteInterview = id => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    return axios
-      .delete(`/api/appointments/${id}`, {
-        interview: appointment.interview
+        interview
       })
       .then(resp => {
         if (!resp.status === 204) {
           console.error("Server responded with a non 2xx response", resp.body);
           return;
         }
-        setState({ ...state, appointments });
+        dispatch({ type: SET_INTERVIEW, id, interview });
       });
   };
+
+  const deleteInterview = id =>
+    axios.delete(`/api/appointments/${id}`).then(resp => {
+      if (!resp.status === 204) {
+        console.error("Server responded with a non 2xx response", resp.body);
+        return;
+      }
+      dispatch({ type: SET_INTERVIEW, id, interview: null });
+    });
 
   const editInterview = () => {
     console.log("editInterview");
@@ -106,13 +80,11 @@ export default function Application(props) {
       axios.get("http://localhost:3001/api/appointments"),
       axios.get("http://localhost:3001/api/interviewers")
     ]).then(all => {
-      setState(oldState => {
-        return {
-          ...oldState, // just dealing with the things that are changing below.  Everything else isn't considered.
-          appointments: all[1].data,
-          days: all[0].data,
-          interviewers: all[2].data
-        };
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data
       });
     });
   }, []);

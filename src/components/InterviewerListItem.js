@@ -8,9 +8,9 @@ export default function InterviewerListItem(props) {
   const interviewerClass = classnames("interviewers__item", {
     "interviewers__item--selected": props.selected
   });
-  
+
   return (
-    <li 
+    <span
       className={interviewerClass}
       id={props.id}
       name={props.name}
@@ -25,8 +25,8 @@ export default function InterviewerListItem(props) {
         alt={props.name}
       />
       {props.name}
-    </li>
+    </span>
   );
-};
+}
 
 //{selected ? "Sylvia Palmer" : ""}
