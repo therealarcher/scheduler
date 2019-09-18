@@ -1,5 +1,7 @@
 # Interview Scheduler
 
+Interview Scheduler is a single page application built using React. It allows users to book student names, interviewers, and select a time from a calendar to create interview appointments during a set week.
+
 ## Setup
 
 Install dependencies with `npm install`.
