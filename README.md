@@ -12,12 +12,6 @@ Install dependencies with `npm install`.
 npm start
 ```
 
-## Running Jest Test Framework
-
-```sh
-npm test
-```
-
 ## Running Storybook Visual Testbed
 
 ```sh
